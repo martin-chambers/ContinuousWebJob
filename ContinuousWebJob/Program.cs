@@ -25,17 +25,11 @@ namespace ContinuousWebJob
             config.UseServiceBus(servicebusConfig);
             JobHost host = new JobHost(config);
             host.RunAndBlock();
-        }
+        }       
 
-        public class Poco
+        public static void WriteMessageInput([ServiceBusTrigger("pocoqueue")] BrokeredMessage message)
         {
-            public string Id { get; set; }
-            public string content { get; set; }
-        }
-
-        public static void WriteMessageInput([ServiceBusTrigger("pocoqueue")] Poco poco)
-        {
-            Console.WriteLine("Received JSON: {0}", poco.content);
+            Console.WriteLine("Received JSON: Id = {0}, Content = {1}", message.Properties["Id"], message.Properties["Content"]);
         }
     }
 }
